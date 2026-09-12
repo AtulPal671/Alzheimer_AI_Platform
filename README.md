@@ -134,7 +134,7 @@ predictions
 
 reports
 
-The database uses primary keys, foreign keys and indexes. Database queries are parameterized to reduce the risk of SQL injection.
+The database uses primary keys, foreign keys, and indexes. Database queries are parameterized to reduce the risk of SQL injection.
 
 Setup
 
@@ -142,17 +142,17 @@ Setup
 
 Make sure Python is installed on your system.
 
-2. Install the required packages
+2. Install the Required Packages
 
 Open a terminal in the project folder and run:
 
 pip install -r requirements.txt
 
-3. Configure the environment
+3. Configure the Environment
 
 Create a .env file from .env.example.
 
-For example:
+Example:
 
 SECRET_KEY=your_secret_key
 
@@ -166,9 +166,9 @@ Do not upload the .env file to GitHub because it contains local configuration an
 
 4. Start MySQL
 
-Make sure MySQL Server, XAMPP or MariaDB is running on port 3306 or update the database settings in .env.
+Make sure MySQL Server, XAMPP, or MariaDB is running on port 3306, or update the database settings in .env.
 
-5. Create and seed the database
+5. Create and Seed the Database
 
 Run:
 
@@ -176,7 +176,7 @@ python -m database.seed
 
 This creates the database and required tables and adds the demo doctor account and sample records.
 
-6. Run the application
+6. Run the Application
 
 Run:
 
@@ -235,6 +235,7 @@ MRI scan history
 
 Previous predictions
 
+
 Reports
 
 MRI Analysis
@@ -243,7 +244,7 @@ The MRI analysis uses the trained model stored in:
 
 model/best_vmamba.pth
 
-The model is loaded through the inference code in:
+The model is loaded through:
 
 model/inference.py
 
@@ -255,6 +256,7 @@ The XAI functionality is handled through:
 
 model/xai.py
 
+
 Authentication
 
 Doctor authentication is handled using Flask sessions.
@@ -262,6 +264,7 @@ Doctor authentication is handled using Flask sessions.
 Passwords are stored using Werkzeug password hashing instead of storing plain-text passwords in the database.
 
 Protected pages require the doctor to be logged in.
+
 
 API
 
@@ -277,4 +280,4 @@ The trained model file is included in the model folder.
 
 Make sure MySQL is running before starting the application.
 
-The project is intended for educational, research and clinical decision-support purposes. It should not be used as a replacement for a qualified medical professional's diagnosis.
+The project is intended for educational, research, and clinical decision-support purposes. It should not be used as a replacement for a qualified medical professional's diagnosis.
