@@ -1,0 +1,544 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+
+{% if selected_report %}
+<!-- ═══════════════════════════════════════════════════════════════════
+     MRI CLINICAL DIAGNOSTIC WORKSPACE
+═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- Workstation Context Header -->
+    <div class="workstation-top-bar no-print">
+        <div class="workstation-patient-info">
+            <a href="{{ url_for('patients.list_patients') }}" class="btn btn-ghost btn-sm" style="padding-left: 0;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Patients
+            </a>
+            <span class="workstation-sep">/</span>
+            <span class="workstation-patient-name">{{ selected_report.patient_name }}</span>
+            <span class="patient-id" style="font-size: 0.78rem;">{{ selected_report.patient_code }}</span>
+            <span class="workstation-sep">·</span>
+            <span class="workstation-study-meta">Exam: {{ selected_report.upload_date }}</span>
+        </div>
+        <div class="workstation-top-actions">
+            <a href="{{ url_for('main.list_reports') }}" class="btn btn-outline btn-sm">
+                All Reports
+            </a>
+            <button onclick="window.print()" class="btn btn-secondary btn-sm">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Print / Save PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Diagnostic Workstation Two-Column Grid -->
+    <div class="mri-workspace-grid">
+
+        <!-- LEFT / MAIN: Large Interactive Clinical MRI Viewer -->
+        <div class="mri-viewer-panel">
+            <div class="mri-viewer-toolbar">
+                <div class="mri-viewer-title">
+                    <span class="mri-scan-badge">AXIAL T1 / T2</span>
+                    <span class="mri-scan-filename">{{ selected_report.file_name }}</span>
+                </div>
+                <div class="mri-viewer-controls" style="display: flex; align-items: center; gap: 0.35rem;">
+                    {% if selected_report.overlay_filename %}
+                    <div class="mri-layer-switcher no-print" style="display: inline-flex; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-xs); padding: 2px; margin-right: 0.35rem;">
+                        <button type="button" class="layer-btn active" id="layerOrigBtn" data-src="{{ url_for('main.serve_uploaded_mri', filename=selected_report.file_name) }}" title="View Original Scan" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; font-weight: 600; border: none; background: var(--accent); color: #fff; border-radius: var(--radius-xs); cursor: pointer;">Original</button>
+                        <button type="button" class="layer-btn" id="layerOverlayBtn" data-src="{{ url_for('main.serve_uploaded_mri', filename=selected_report.overlay_filename) }}" title="View MRI + XAI Overlay" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; font-weight: 600; border: none; background: transparent; color: var(--text-secondary); border-radius: var(--radius-xs); cursor: pointer;">Overlay</button>
+                        <button type="button" class="layer-btn" id="layerHeatmapBtn" data-src="{{ url_for('main.serve_uploaded_mri', filename=selected_report.heatmap_filename) }}" title="View XAI Attribution Heatmap" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; font-weight: 600; border: none; background: transparent; color: var(--text-secondary); border-radius: var(--radius-xs); cursor: pointer;">Heatmap</button>
+                    </div>
+                    {% endif %}
+
+                    <button type="button" class="mri-tool-btn" id="mriZoomIn" title="Zoom In">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                    </button>
+                    <button type="button" class="mri-tool-btn" id="mriZoomOut" title="Zoom Out">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                    </button>
+                    <button type="button" class="mri-tool-btn" id="mriReset" title="Reset View">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                    </button>
+                    <button type="button" class="mri-tool-btn" id="mriInvert" title="Invert Contrast">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path></svg>
+                    </button>
+                    <button type="button" class="mri-tool-btn" id="mriFullscreen" title="Toggle Fullscreen">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Viewport Stage with Radiological Anatomical Markers -->
+            <div class="mri-viewport-stage" id="mriViewportStage">
+                <span class="mri-marker marker-top">A</span>
+                <span class="mri-marker marker-bottom">P</span>
+                <span class="mri-marker marker-left">R</span>
+                <span class="mri-marker marker-right">L</span>
+
+                <div class="mri-image-wrapper" id="mriImageWrapper">
+                    <img
+                        id="mriPrimaryImage"
+                        src="{{ url_for('main.serve_uploaded_mri', filename=selected_report.file_name) }}"
+                        alt="Brain MRI Axial Slice for {{ selected_report.patient_name }}"
+                        onerror="this.style.display='none'; document.getElementById('mriFallbackPlaceholder').style.display='flex';"
+                    >
+                    <div id="mriFallbackPlaceholder" class="mri-fallback-placeholder" style="display: none;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 8v4M12 16h.01"></path>
+                        </svg>
+                        <span>MRI Preview Unavailable</span>
+                        <code style="font-size: 0.7rem; color: #888;">{{ selected_report.file_name }}</code>
+                    </div>
+                </div>
+
+                <div class="mri-viewport-footer-info">
+                    <span id="layerNameIndicator">Layer: Original MRI</span>
+                    <span id="zoomLevelIndicator">Zoom: 100%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT / SECONDARY: Diagnostic AI Assessment & Interpretation Panel -->
+        <div class="mri-analysis-panel">
+
+            <!-- Patient Demographic Header -->
+            <div class="mri-patient-card">
+                <div class="mri-patient-primary">
+                    <div class="mri-patient-name">{{ selected_report.patient_name }}</div>
+                    <div class="patient-id">{{ selected_report.patient_code }}</div>
+                </div>
+                <div class="mri-patient-meta-grid">
+                    <div>
+                        <span class="meta-label">Age / Sex</span>
+                        <span class="meta-value">{{ selected_report.age }} yrs / {{ selected_report.gender }}</span>
+                    </div>
+                    <div>
+                        <span class="meta-label">Attending</span>
+                        <span class="meta-value">{{ current_doctor.name }}</span>
+                    </div>
+                    <div>
+                        <span class="meta-label">Study ID</span>
+                        <span class="meta-value">RPT-{{ selected_report.scan_id }}</span>
+                    </div>
+                    <div>
+                        <span class="meta-label">Exam Date</span>
+                        <span class="meta-value">{{ selected_report.upload_date }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SINGLE Primary AI Diagnostic Assessment Card -->
+            <div class="mri-assessment-card
+                {% if 'Moderate' in selected_report.predicted_class or 'Alzheimer' in selected_report.predicted_class or 'AD' in selected_report.predicted_class %}
+                    assessment-risk
+                {% elif 'Mild' in selected_report.predicted_class or 'VeryMild' in selected_report.predicted_class or 'Impairment' in selected_report.predicted_class or 'MCI' in selected_report.predicted_class %}
+                    assessment-caution
+                {% else %}
+                    assessment-ok
+                {% endif %}">
+                
+                <div class="assessment-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <span class="assessment-eyebrow" style="font-size: 0.65rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">AI DIAGNOSTIC ASSESSMENT</span>
+                        <div class="assessment-result-title" style="font-size: 1.35rem; font-weight: 700; color: var(--text-h); margin-top: 0.2rem;">
+                            {{ selected_report.predicted_class|format_diagnosis }}
+                        </div>
+                    </div>
+                    <span class="badge
+                        {% if selected_report.clinical_notes %}
+                            badge-success
+                        {% elif 'Moderate' in selected_report.predicted_class or 'Alzheimer' in selected_report.predicted_class %}
+                            badge-danger
+                        {% else %}
+                            badge-warning
+                        {% endif %}" style="font-size: 0.75rem; padding: 0.35rem 0.65rem;">
+                        {% if selected_report.clinical_notes %}
+                            Reviewed
+                        {% else %}
+                            Needs Review
+                        {% endif %}
+                    </span>
+                </div>
+
+                <!-- Confidence Gauge Progress Bar -->
+                {% set conf_val = (selected_report.confidence_score * 100)|round(1) if selected_report.confidence_score <= 1.0 else selected_report.confidence_score %}
+                <div class="confidence-row" style="margin-top: 0.85rem;">
+                    <span class="confidence-label">Prediction Confidence</span>
+                    <span class="confidence-number">{{ conf_val }}%</span>
+                </div>
+                <div class="confidence-bar-track" style="margin-top: 0.25rem;">
+                    <div class="confidence-bar-fill" style="width: {{ conf_val }}%;"></div>
+                </div>
+
+                <div style="margin-top: 0.9rem;">
+                    {% if selected_report.overlay_filename %}
+                    <button type="button" class="btn btn-outline btn-sm" onclick="openModal('xaiModal')" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-weight: 600;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        View AI Explanation &rarr;
+                    </button>
+                    {% else %}
+                    <span style="font-size: 0.72rem; color: var(--text-muted); display: block; text-align: center; font-style: italic;">
+                        XAI Feature Attribution Visualization Unavailable
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- PHYSICIAN NOTES -->
+            <div class="clinical-section-block" style="margin-top: 1rem;">
+                <h3 class="clinical-section-title">PHYSICIAN NOTES</h3>
+                
+                <form action="{{ url_for('main.save_clinical_notes', scan_id=selected_report.scan_id) }}" method="POST">
+                    <div class="form-group" style="margin-bottom: 0.4rem;">
+                        <textarea
+                            name="clinical_notes"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Add clinical observations, interpretation, or review notes..."
+                            style="font-size: 0.82rem; line-height: 1.45; resize: vertical;"
+                        >{{ selected_report.clinical_notes if selected_report.clinical_notes else '' }}</textarea>
+                    </div>
+                    
+                    {% if selected_report.reviewed_at %}
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.4rem;">
+                        Reviewed by {{ selected_report.reviewer_name if selected_report.reviewer_name else current_doctor.name }} &bull; {{ selected_report.reviewed_at }}
+                    </div>
+                    {% endif %}
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-primary btn-sm" style="font-weight: 600;">
+                            Save Notes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Printable Report Section (@media print) -->
+            <div class="print-only-report-section">
+                <div style="padding: 0; font-family: 'Inter', -apple-system, sans-serif; color: #0f172a; background: #ffffff;">
+                    
+                    <!-- Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #0f172a; padding-bottom: 0.6rem; margin-bottom: 1rem;">
+                        <div>
+                            <h1 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; margin: 0;">NEUROSCAN AI</h1>
+                            <div style="font-size: 0.78rem; font-weight: 600; color: #475569; margin-top: 0.1rem;">CLINICAL DIAGNOSTIC REPORT &bull; ALZHEIMER'S MRI STAGING</div>
+                        </div>
+                        <div style="text-align: right; font-size: 0.75rem; color: #64748b; font-weight: 500;">
+                            <div><strong>Study ID:</strong> RPT-{{ selected_report.scan_id }}</div>
+                            <div><strong>Exam Date:</strong> {{ selected_report.upload_date }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Patient Information Block -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.75rem 0.9rem; margin-bottom: 1rem;">
+                        <div style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: #475569; letter-spacing: 0.05em; margin-bottom: 0.4rem; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.2rem;">PATIENT &amp; STUDY DEMOGRAPHICS</div>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; line-height: 1.5;">
+                            <tr>
+                                <td style="width: 50%;"><strong>Patient Name:</strong> {{ selected_report.patient_name }}</td>
+                                <td style="width: 50%;"><strong>Patient ID:</strong> {{ selected_report.patient_code }}</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;"><strong>Age / Sex:</strong> {{ selected_report.age }} yrs / {{ selected_report.gender }}</td>
+                                <td style="width: 50%;"><strong>Attending Physician:</strong> {{ current_doctor.name }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- AI Assessment & Visuals Grid -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; page-break-inside: avoid;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.75rem 0.9rem;">
+                            <div style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: #475569; letter-spacing: 0.05em; margin-bottom: 0.4rem; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.2rem;">AI DIAGNOSTIC STAGING</div>
+                            <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-top: 0.3rem;">{{ selected_report.predicted_class|format_diagnosis }}</div>
+                            {% set conf_val = (selected_report.confidence_score * 100)|round(1) if selected_report.confidence_score <= 1.0 else selected_report.confidence_score %}
+                            <div style="font-size: 0.82rem; color: #334155; margin-top: 0.4rem;">
+                                <strong>Prediction Confidence:</strong> {{ conf_val }}%
+                            </div>
+                        </div>
+
+                        <!-- MRI Image Preview -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem; text-align: center;">
+                            <div style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: #475569; letter-spacing: 0.05em; margin-bottom: 0.3rem;">PRIMARY MRI SLICE</div>
+                            <img src="{{ url_for('main.serve_uploaded_mri', filename=selected_report.file_name) }}" alt="MRI Slice" style="max-height: 120px; max-width: 100%; object-fit: contain; margin: 0 auto; display: block; border-radius: 4px; background: #000;">
+                        </div>
+                    </div>
+
+                    <!-- Physician Review & Notes -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.75rem 0.9rem; margin-bottom: 1rem; page-break-inside: avoid;">
+                        <div style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: #475569; letter-spacing: 0.05em; margin-bottom: 0.4rem; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.2rem;">PHYSICIAN REVIEW &amp; INTERPRETATION</div>
+                        {% if selected_report.clinical_notes %}
+                            <div style="font-size: 0.84rem; line-height: 1.5; color: #0f172a; white-space: pre-wrap; margin-bottom: 0.6rem;">{{ selected_report.clinical_notes }}</div>
+                            <div style="font-size: 0.74rem; color: #64748b; font-weight: 500;">
+                                <strong>Reviewed by:</strong> {{ selected_report.reviewer_name if selected_report.reviewer_name else current_doctor.name }} &bull; {{ selected_report.reviewed_at }}
+                            </div>
+                        {% else %}
+                            <div style="font-size: 0.82rem; font-style: italic; color: #64748b;">Physician review pending.</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Disclaimer Footer -->
+                    <div style="border-top: 1px solid #e2e8f0; padding-top: 0.6rem; font-size: 0.68rem; color: #64748b; line-height: 1.45; text-align: justify; page-break-inside: avoid;">
+                        <strong>Clinical Disclaimer:</strong> This automated NeuroScan AI diagnostic assessment is an assistive decision-support output and does not constitute an independent medical diagnosis. Clinical correlation by an attending physician is required.
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Primary / Secondary Workstation CTAs -->
+            <div class="mri-actions-footer no-print" style="margin-top: 1rem; display: flex; gap: 0.55rem;">
+                <button onclick="window.print()" class="btn btn-primary" style="flex: 1; font-weight: 600;">
+                    View / Print Full Report &rarr;
+                </button>
+                <a href="{{ url_for('patients.list_patients') }}" class="btn btn-outline">
+                    Return to Patients
+                </a>
+            </div>
+
+        </div>
+
+    </div><!-- /mri-workspace-grid -->
+
+    <!-- Dedicated AI Explanation Modal System -->
+    {% if selected_report.overlay_filename %}
+    <div class="modal-overlay" id="xaiModal" role="dialog" aria-modal="true" aria-labelledby="xaiModalTitle">
+        <div class="modal-container" style="max-width: 920px; width: 92%;">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title" id="xaiModalTitle">AI EXPLANATION</h3>
+                    <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.15rem;">
+                        Feature Attribution Analysis &nbsp;·&nbsp; Target Prediction: <strong>{{ selected_report.predicted_class|format_diagnosis }}</strong> &nbsp;·&nbsp; Confidence: <strong>{{ conf_val }}%</strong>
+                    </div>
+                </div>
+                <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 1.15rem;">
+                
+                <!-- Side-by-side XAI Comparison Grid -->
+                <div class="xai-comparison-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; margin-bottom: 1rem;">
+                    
+                    <!-- 1. Original MRI -->
+                    <div class="xai-card" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="padding: 0.45rem 0.65rem; background: var(--bg-card); border-bottom: 1px solid var(--border); font-size: 0.75rem; font-weight: 600; color: var(--text-h); text-align: center;">
+                            1. Original Structural MRI
+                        </div>
+                        <div style="padding: 0.5rem; display: flex; align-items: center; justify-content: center; background: #010408; height: 220px;">
+                            <img src="{{ url_for('main.serve_uploaded_mri', filename=selected_report.file_name) }}" alt="Original MRI" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        </div>
+                    </div>
+
+                    <!-- 2. XAI Attribution Heatmap -->
+                    <div class="xai-card" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="padding: 0.45rem 0.65rem; background: var(--bg-card); border-bottom: 1px solid var(--border); font-size: 0.75rem; font-weight: 600; color: var(--text-h); text-align: center;">
+                            2. XAI Feature Attribution
+                        </div>
+                        <div style="padding: 0.5rem; display: flex; align-items: center; justify-content: center; background: #010408; height: 220px;">
+                            <img src="{{ url_for('main.serve_uploaded_mri', filename=selected_report.heatmap_filename) }}" alt="XAI Heatmap" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        </div>
+                    </div>
+
+                    <!-- 3. MRI + XAI Overlay -->
+                    <div class="xai-card" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="padding: 0.45rem 0.65rem; background: var(--bg-card); border-bottom: 1px solid var(--border); font-size: 0.75rem; font-weight: 600; color: var(--text-h); text-align: center;">
+                            3. MRI + XAI Overlay Composite
+                        </div>
+                        <div style="padding: 0.5rem; display: flex; align-items: center; justify-content: center; background: #010408; height: 220px;">
+                            <img src="{{ url_for('main.serve_uploaded_mri', filename=selected_report.overlay_filename) }}" alt="MRI XAI Overlay" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Feature Contribution Gradient Legend -->
+                <div class="xai-legend-box" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; margin-bottom: 0.85rem;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.71rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.3rem;">
+                        <span>Higher Feature Contribution (Strong Impact)</span>
+                        <span>Lower Contribution</span>
+                    </div>
+                    <div style="height: 10px; border-radius: 999px; background: linear-gradient(90deg, #ff0000 0%, #ffff00 33%, #00ffff 66%, #000080 100%); border: 1px solid rgba(0,0,0,0.15);"></div>
+                </div>
+
+                <!-- Restrained Clinical Attribution Disclaimer -->
+                <div class="xai-disclaimer-box" style="background: var(--accent-subtle); border: 1px solid var(--accent-border); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; font-size: 0.75rem; color: var(--text-body); line-height: 1.45;">
+                    <strong>Clinical Disclaimer:</strong> XAI highlights represent image features that contributed to the model's prediction and should not be interpreted as definitive anatomical lesions or independent clinical findings. Physician review and clinical correlation are required.
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                    <button type="button" class="btn btn-primary btn-sm" data-close-modal>Close Explanation</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% else %}
+<!-- ═══════════════════════════════════════════════════════════════════
+     REPORTS DIRECTORY VIEW
+═══════════════════════════════════════════════════════════════════ -->
+
+    <div class="page-header">
+        <div class="page-header-title">
+            <h1>Diagnostic Reports</h1>
+            <p>Completed MRI assessments and clinical evaluations.</p>
+        </div>
+    </div>
+
+    <div class="table-panel">
+        {% if reports %}
+        <div class="table-responsive">
+            <table class="clinical-table" aria-label="Diagnostic reports">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Diagnosis</th>
+                        <th>Confidence</th>
+                        <th>Exam Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-h);">{{ report.patient_name }}</div>
+                            <div class="patient-id">{{ report.patient_code }}</div>
+                        </td>
+                        <td>
+                            {% if report.predicted_class %}
+                                <span class="badge
+                                    {% if 'NonDemented' in report.predicted_class or 'Normal' in report.predicted_class or 'CN' in report.predicted_class %}badge-success
+                                    {% elif 'Moderate' in report.predicted_class or 'Alzheimer' in report.predicted_class or 'AD' in report.predicted_class %}badge-danger
+                                    {% else %}badge-warning{% endif %}">
+                                    {{ report.predicted_class|format_diagnosis }}
+                                </span>
+                            {% else %}
+                                <span class="badge badge-neutral">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-weight: 600; color: var(--text-h);">
+                            {% if report.confidence_score %}
+                                {{ (report.confidence_score * 100)|round(1) if report.confidence_score <= 1.0 else report.confidence_score }}%
+                            {% else %}—{% endif %}
+                        </td>
+                        <td style="color: var(--text-secondary); font-size: 0.78rem;">{{ report.upload_date }}</td>
+                        <td>
+                            {% if report.clinical_notes %}
+                                <span class="badge badge-success">Reviewed</span>
+                            {% else %}
+                                <span class="badge badge-neutral">Awaiting Review</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('main.view_report', scan_id=report.scan_id) }}" class="btn btn-outline btn-sm">
+                                Open Workspace
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p class="empty-state-title">No Diagnostic Reports Yet</p>
+            <p class="empty-state-sub">Upload an MRI scan from the dashboard or a patient profile to generate an assessment.</p>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary btn-sm">Go to Dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+
+{% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if selected_report %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let currentZoom = 1;
+    let isInverted = false;
+    const img = document.getElementById('mriPrimaryImage');
+    const zoomIndicator = document.getElementById('zoomLevelIndicator');
+    const layerIndicator = document.getElementById('layerNameIndicator');
+    const stage = document.getElementById('mriViewportStage');
+
+    function updateTransform() {
+        if (!img) return;
+        img.style.transform = `scale(${currentZoom})`;
+        img.style.filter = isInverted ? 'invert(1) contrast(1.15)' : 'none';
+        if (zoomIndicator) zoomIndicator.textContent = `Zoom: ${Math.round(currentZoom * 100)}%`;
+    }
+
+    // Layer Switcher Buttons
+    document.querySelectorAll('.layer-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.layer-btn').forEach(b => {
+                b.classList.remove('active');
+                b.style.background = 'transparent';
+                b.style.color = 'var(--text-secondary)';
+            });
+            btn.classList.add('active');
+            btn.style.background = 'var(--accent)';
+            btn.style.color = '#ffffff';
+
+            const newSrc = btn.getAttribute('data-src');
+            if (img && newSrc) {
+                img.src = newSrc;
+            }
+            if (layerIndicator) {
+                const layerTitle = btn.getAttribute('title') || 'Layer';
+                layerIndicator.textContent = `Layer: ${layerTitle.replace('View ', '')}`;
+            }
+        });
+    });
+
+    document.getElementById('mriZoomIn')?.addEventListener('click', () => {
+        if (currentZoom < 2.5) {
+            currentZoom += 0.2;
+            updateTransform();
+        }
+    });
+
+    document.getElementById('mriZoomOut')?.addEventListener('click', () => {
+        if (currentZoom > 0.6) {
+            currentZoom -= 0.2;
+            updateTransform();
+        }
+    });
+
+    document.getElementById('mriReset')?.addEventListener('click', () => {
+        currentZoom = 1;
+        isInverted = false;
+        updateTransform();
+    });
+
+    document.getElementById('mriInvert')?.addEventListener('click', () => {
+        isInverted = !isInverted;
+        updateTransform();
+    });
+
+    document.getElementById('mriFullscreen')?.addEventListener('click', () => {
+        if (!stage) return;
+        if (!document.fullscreenElement) {
+            stage.requestFullscreen?.().catch(() => {});
+        } else {
+            document.exitFullscreen?.().catch(() => {});
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

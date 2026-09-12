@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <!-- Page Header & Action Bar -->
+    <div class="page-header" style="margin-bottom: 1.25rem;">
+        <div class="page-header-title">
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text-h); margin: 0;">{{ patient.name }}</h1>
+                <span class="patient-id" style="font-size: 0.8rem; font-weight: 600; padding: 0.2rem 0.55rem; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-xs);">
+                    {{ patient.patient_code }}
+                </span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                {{ patient.age }} years &bull; {{ patient.gender }} &bull; Registered {% if patient.created_at %}{{ patient.created_at[:10] if patient.created_at is string else patient.created_at.strftime('%Y-%m-%d') }}{% else %}—{% endif %}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 0.55rem; flex-wrap: wrap; align-items: center;">
+            <a href="{{ url_for('patients.list_patients') }}" class="btn btn-outline btn-sm">
+                &larr; Back to Patients
+            </a>
+            <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('analysisModal').classList.add('active')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Upload MRI Scan
+            </button>
+        </div>
+    </div>
+
+    <!-- Clinical Workstation Grid Layout -->
+    <div class="clinical-grid" style="display: grid; grid-template-columns: 320px 1fr; gap: 1.25rem;">
+
+        <!-- LEFT COLUMN: Read-Only Patient Demographics Card -->
+        <div class="clinical-panel" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.15rem;">
+            <div class="section-header" style="border-bottom: 1px solid var(--border); padding-bottom: 0.65rem; margin-bottom: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+                <span class="section-title" style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-h);">PATIENT INFORMATION</span>
+            </div>
+
+            <!-- Read-Only Information Grid -->
+            <div class="patient-info-details" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; font-size: 0.78rem;">
+                    <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.45rem 0.65rem; border-radius: var(--radius-xs);">
+                        <div style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Age</div>
+                        <div style="font-weight: 600; color: var(--text-h); margin-top: 0.1rem;">{{ patient.age }} years</div>
+                    </div>
+                    <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.45rem 0.65rem; border-radius: var(--radius-xs);">
+                        <div style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Sex</div>
+                        <div style="font-weight: 600; color: var(--text-h); margin-top: 0.1rem;">{{ patient.gender }}</div>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.45rem 0.65rem; border-radius: var(--radius-xs); font-size: 0.78rem;">
+                    <div style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Patient ID</div>
+                    <div style="font-weight: 600; color: var(--text-h); margin-top: 0.1rem;">{{ patient.patient_code }}</div>
+                </div>
+
+                <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.45rem 0.65rem; border-radius: var(--radius-xs); font-size: 0.78rem;">
+                    <div style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Registration Date</div>
+                    <div style="font-weight: 600; color: var(--text-h); margin-top: 0.1rem;">
+                        {% if patient.created_at %}{{ patient.created_at[:10] if patient.created_at is string else patient.created_at.strftime('%Y-%m-%d') }}{% else %}—{% endif %}
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.45rem 0.65rem; border-radius: var(--radius-xs); font-size: 0.78rem;">
+                    <div style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Attending Physician</div>
+                    <div style="font-weight: 600; color: var(--text-h); margin-top: 0.1rem;">{{ current_doctor.name }}</div>
+                </div>
+
+                <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.45rem 0.65rem; border-radius: var(--radius-xs); font-size: 0.78rem;">
+                    <div style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Contact</div>
+                    <div style="font-weight: 600; color: var(--text-h); margin-top: 0.1rem;">{{ patient.contact_info if patient.contact_info else '—' }}</div>
+                </div>
+
+                <div style="padding-top: 0.5rem; border-top: 1px solid var(--border); margin-top: 0.25rem;">
+                    <div style="font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 0.3rem;">Clinical History</div>
+                    <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.55rem 0.65rem; border-radius: var(--radius-xs);">
+                        {{ patient.medical_history if patient.medical_history else 'No baseline neurological history recorded.' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: MRI Analysis History List / Timeline -->
+        <div class="clinical-panel" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.15rem;">
+            <div class="section-header" style="border-bottom: 1px solid var(--border); padding-bottom: 0.65rem; margin-bottom: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+                <span class="section-title" style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-h);">
+                    MRI ANALYSIS HISTORY
+                </span>
+                <span class="badge badge-neutral" style="font-size: 0.72rem; font-weight: 600;">
+                    {{ scans|length }} ANALYSES
+                </span>
+            </div>
+
+            <div class="section-body">
+                {% if scans %}
+                    <div class="mri-timeline-list" style="display: flex; flex-direction: column; gap: 0.65rem;">
+                        {% for scan in scans %}
+                        <div class="mri-analysis-row" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 0.95rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <div style="min-width: 180px;">
+                                <div style="font-weight: 600; color: var(--text-h); font-size: 0.84rem;">{{ scan.file_name }}</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem;">Uploaded: {{ scan.upload_date }}</div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                {% if scan.predicted_class %}
+                                    <div style="text-align: right;">
+                                        <div style="font-weight: 700; color: var(--text-h); font-size: 0.84rem;">{{ scan.predicted_class|format_diagnosis }}</div>
+                                        {% set s_conf = (scan.confidence_score * 100)|round(1) if scan.confidence_score <= 1.0 else scan.confidence_score %}
+                                        <div style="font-size: 0.71rem; color: var(--text-secondary);">{{ s_conf }}% confidence</div>
+                                    </div>
+                                {% else %}
+                                    <div style="font-size: 0.78rem; color: var(--text-muted); font-style: italic;">Analysis Pending</div>
+                                {% endif %}
+
+                                <span class="badge
+                                    {% if scan.clinical_notes %}
+                                        badge-success
+                                    {% elif scan.predicted_class and ('Moderate' in scan.predicted_class or 'Alzheimer' in scan.predicted_class) %}
+                                        badge-danger
+                                    {% else %}
+                                        badge-warning
+                                    {% endif %}">
+                                    {% if scan.clinical_notes %}
+                                        Reviewed
+                                    {% else %}
+                                        Needs Review
+                                    {% endif %}
+                                </span>
+
+                                <a href="{{ url_for('main.view_report', scan_id=scan.scan_id) }}" class="btn btn-outline btn-sm" style="font-weight: 600; text-decoration: none;">
+                                    View Analysis &rarr;
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- Clean Empty State -->
+                    <div class="empty-state" style="padding: 2.5rem 1rem; text-align: center; background: var(--bg-subtle); border: 1px dashed var(--border); border-radius: var(--radius-sm);">
+                        <div style="width: 42px; height: 42px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto; color: var(--text-muted);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        </div>
+                        <p class="empty-state-title" style="font-weight: 600; color: var(--text-h); font-size: 0.9rem; margin-bottom: 0.25rem;">No MRI analyses yet</p>
+                        <p class="empty-state-sub" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Upload an MRI scan to begin an AI-assisted assessment for {{ patient.name }}.</p>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('analysisModal').classList.add('active')">
+                            + Upload MRI Scan
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Upload MRI Scan Modal -->
+<div class="modal-overlay" id="analysisModal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+    <div class="modal-container" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3 class="modal-title" id="detailModalTitle">Upload MRI Scan — {{ patient.name }}</h3>
+            <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 1.15rem;">
+            <form action="{{ url_for('main.upload_mri') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                    <label class="form-label" style="font-size: 0.75rem;">Patient</label>
+                    <input type="text" class="form-control" value="{{ patient.name }} ({{ patient.patient_code }})" disabled readonly style="font-size: 0.82rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="detailMriFile" class="form-label" style="font-size: 0.75rem;">Select MRI Scan File *</label>
+                    <input id="detailMriFile" type="file" name="mri_file" class="form-control" required accept=".png,.jpg,.jpeg,.dcm,.nii" style="font-size: 0.82rem;">
+                    <span style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; display: block;">
+                        Supported: DICOM (.dcm), NIfTI (.nii), PNG, JPG — max 32 MB
+                    </span>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 0.55rem;">
+                    <button type="button" class="btn btn-outline btn-sm" data-close-modal>Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Upload &amp; Analyze</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

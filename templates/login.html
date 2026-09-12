@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-clinical-stage">
+
+        <!-- LEFT SIDE: Prominent Hero Branding & Large Medical MRI/Brain Visual (~320px) -->
+        <div class="login-identity-col">
+            
+            <!-- Hero Brand Header -->
+            <div class="login-identity-header">
+                <div class="login-identity-icon-box" aria-hidden="true">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.5 4C6.5 4 4 6.5 4 10C4 12.5 5.5 14.5 7.5 15.5C8 16 8.5 17 8.5 18H15.5C15.5 17 16 16 16.5 15.5C18.5 14.5 20 12.5 20 10C20 6.5 17.5 4 14.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 3V14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.75"/>
+                        <path class="ns-scan-pulse" d="M8 9C9 10 10 10.5 12 10.5C14 10.5 15 10 16 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                        <circle cx="12" cy="14" r="1.4" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="login-identity-text">
+                    <h1 class="login-brand-title">NeuroScan AI</h1>
+                    <p class="login-brand-subtitle">Clinical MRI Diagnostic Workstation</p>
+                </div>
+            </div>
+
+            <!-- Substantial Main MRI / Brain Scanning Visual Centerpiece (280–340px) -->
+            <div class="login-visual-stage" aria-hidden="true">
+                <svg viewBox="0 0 340 240" fill="none" xmlns="http://www.w3.org/2000/svg" class="login-mri-vector">
+                    <!-- Subtle Technical Calibration Grid / Crosshairs -->
+                    <line x1="15" y1="120" x2="325" y2="120" stroke="currentColor" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.18"/>
+                    <line x1="170" y1="15" x2="170" y2="225" stroke="currentColor" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.18"/>
+
+                    <!-- Concentric MRI Imaging Rings -->
+                    <circle cx="170" cy="120" r="105" stroke="currentColor" stroke-width="0.75" stroke-dasharray="4 4" opacity="0.22"/>
+                    <circle cx="170" cy="120" r="80" stroke="currentColor" stroke-width="1.1" opacity="0.35"/>
+                    <circle cx="170" cy="120" r="56" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2 3" opacity="0.28"/>
+
+                    <!-- Rotating MRI Scan Beam Arc (Continuous 6s Orbit) -->
+                    <circle class="mri-scan-orbit" cx="170" cy="120" r="80" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="36 125"/>
+
+                    <!-- Anatomical Cerebral Hemisphere Contours -->
+                    <path d="M170 52C126 52 92 85 92 120C92 155 126 188 170 188C214 188 248 155 248 120C248 85 214 52 170 52Z" stroke="currentColor" stroke-width="1.4" opacity="0.65"/>
+                    <path d="M170 52V188" stroke="currentColor" stroke-width="0.9" stroke-dasharray="3 3" opacity="0.45"/>
+
+                    <!-- Internal Sulci & Hippocampal Curvature Arcs -->
+                    <path d="M132 98C148 114 140 136 132 152" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+                    <path d="M208 98C192 114 200 136 208 152" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+                    <path d="M112 118C127 125 123 141 116 156" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+                    <path d="M228 118C213 125 217 141 224 156" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+
+                    <!-- Key Diagnostic Neural Nodes -->
+                    <circle class="ns-node-1" cx="170" cy="82" r="2.8" fill="currentColor" opacity="0.85"/>
+                    <circle class="ns-node-2" cx="140" cy="120" r="3.2" fill="currentColor" opacity="0.95"/>
+                    <circle class="ns-node-3" cx="200" cy="120" r="3.2" fill="currentColor" opacity="0.95"/>
+                    <circle class="ns-node-4" cx="132" cy="150" r="2.6" fill="currentColor" opacity="0.8"/>
+                    <circle class="ns-node-5" cx="208" cy="150" r="2.6" fill="currentColor" opacity="0.8"/>
+                    <circle class="ns-node-6" cx="170" cy="164" r="2.8" fill="currentColor" opacity="0.85"/>
+
+                    <!-- Laser Scan Sweep Line -->
+                    <line class="mri-laser-beam" x1="102" y1="76" x2="238" y2="76" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+
+                    <!-- Vector Neural Lattice Interconnections -->
+                    <line x1="170" y1="82" x2="140" y2="120" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                    <line x1="170" y1="82" x2="200" y2="120" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                    <line x1="140" y1="120" x2="200" y2="120" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.35"/>
+                    <line x1="140" y1="120" x2="132" y2="150" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                    <line x1="200" y1="120" x2="208" y2="150" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                    <line x1="132" y1="150" x2="170" y2="164" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                    <line x1="208" y1="150" x2="170" y2="164" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                </svg>
+            </div>
+
+            <!-- Single Concise Statement -->
+            <p class="login-identity-caption">
+                AI-assisted MRI assessment for clinical decision support.
+            </p>
+
+            <!-- Subtle Trust / Value Indicators -->
+            <div class="login-trust-row">
+                <span class="trust-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Clinical Decision Support
+                </span>
+                <span class="trust-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Secure Clinical Workspace
+                </span>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: Focused Physician Sign-In Panel -->
+        <div class="login-form-col">
+            <div class="card login-auth-card">
+                <div class="login-card-header">
+                    <h2 class="login-welcome-title">Welcome back</h2>
+                    <p class="login-welcome-sub">Sign in to your clinical workspace.</p>
+                </div>
+
+                <form id="loginForm" action="{{ url_for('main.login') }}" method="POST" autocomplete="on">
+                    <div class="form-group">
+                        <label for="doctorEmail" class="form-label">Hospital Email Address</label>
+                        <input
+                            type="email"
+                            id="doctorEmail"
+                            name="email"
+                            class="form-control"
+                            placeholder="dr.jenkins@hospital.org"
+                            value="dr.jenkins@hospital.org"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doctorPassword" class="form-label">Password</label>
+                        <div class="password-wrapper" style="position: relative; display: flex; align-items: center;">
+                            <input
+                                type="password"
+                                id="doctorPassword"
+                                name="password"
+                                class="form-control"
+                                placeholder="••••••••••••"
+                                value="password123"
+                                autocomplete="current-password"
+                                style="padding-right: 2.4rem;"
+                                required
+                            >
+                            <button type="button" id="togglePasswordBtn" class="password-toggle-btn" aria-label="Toggle password visibility" title="Show/hide password" style="position: absolute; right: 0.6rem; background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; padding: 0.2rem;">
+                                <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="login-options-row">
+                        <label for="rememberMe" class="login-remember-label">
+                            <input type="checkbox" id="rememberMe" name="remember" checked class="login-checkbox">
+                            Keep me signed in
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg login-submit-btn" id="loginSubmitBtn">
+                        Sign In
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 1rem; font-size: 0.78rem; color: var(--text-secondary);">
+                    Don't have an account?
+                    <a href="{{ url_for('main.register') }}" style="color: var(--accent); font-weight: 600; text-decoration: none; margin-left: 0.2rem;">
+                        Create Doctor Account &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <div class="login-security-footer">
+                <span>Restricted access for authorized medical personnel</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('togglePasswordBtn')?.addEventListener('click', function() {
+    var passInput = document.getElementById('doctorPassword');
+    if (!passInput) return;
+    if (passInput.type === 'password') {
+        passInput.type = 'text';
+        this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
+    } else {
+        passInput.type = 'password';
+        this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+    }
+});
+
+document.getElementById('loginForm')?.addEventListener('submit', function () {
+    var btn = document.getElementById('loginSubmitBtn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="clinical-spinner-sm"></span> Signing in…';
+    }
+});
+</script>
+{% endblock %}

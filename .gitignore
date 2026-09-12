@@ -1,0 +1,28 @@
+# Environment / secrets
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Temporary files
+scratch/
+
+# Uploaded user/MRI files
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

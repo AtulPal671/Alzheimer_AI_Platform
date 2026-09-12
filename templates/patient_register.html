@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container" style="max-width: 680px;">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-title">
+            <h1>Register Patient</h1>
+            <p>Enter clinical demographics to create a new patient record.</p>
+        </div>
+        <a href="{{ url_for('patients.list_patients') }}" class="btn btn-outline">
+            &larr; Patient Registry
+        </a>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="clinical-panel" style="padding: 1.25rem 1.35rem;">
+        <form action="{{ url_for('patients.register_patient') }}" method="POST" autocomplete="off">
+
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label for="patient_code" class="form-label">Patient ID *</label>
+                    <input
+                        type="text"
+                        id="patient_code"
+                        name="patient_code"
+                        class="form-control"
+                        value="{{ suggested_code }}"
+                        style="font-family: ui-monospace, monospace; font-weight: 600; color: var(--accent);"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name *</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="form-control"
+                        placeholder="e.g., Margaret Thatcher"
+                        value="{{ form_data.name if form_data else '' }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="age" class="form-label">Age (years) *</label>
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        class="form-control"
+                        placeholder="e.g., 74"
+                        min="1"
+                        max="120"
+                        value="{{ form_data.age if form_data else '' }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="gender" class="form-label">Gender *</label>
+                    <select id="gender" name="gender" class="form-control" required>
+                        <option value="">— Select —</option>
+                        <option value="Female" {% if form_data and form_data.gender == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Male"   {% if form_data and form_data.gender == 'Male'   %}selected{% endif %}>Male</option>
+                        <option value="Other"  {% if form_data and form_data.gender == 'Other'  %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_info" class="form-label">Contact Information</label>
+                <input
+                    type="text"
+                    id="contact_info"
+                    name="contact_info"
+                    class="form-control"
+                    placeholder="Phone number or hospital email"
+                    value="{{ form_data.contact_info if form_data else '' }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="medical_history" class="form-label">Clinical History &amp; Baseline Notes</label>
+                <textarea
+                    id="medical_history"
+                    name="medical_history"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Describe onset of memory symptoms, family history of dementia, comorbidities, or neurological findings…"
+                >{{ form_data.medical_history if form_data else '' }}</textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+                <a href="{{ url_for('patients.list_patients') }}" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Patient Record</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}

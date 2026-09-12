@@ -1,0 +1,870 @@
+/* =========================================================================
+   NeuroScan AI — Dashboard & Clinical Workstation Styles
+   Final Polish | 8px Spacing System | Professional Radiology Workstation
+   ========================================================================= */
+
+/* ─── PAGE SHELL ──────────────────────────────────────────────────── */
+
+.dash-page { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* ─── DASHBOARD HERO ──────────────────────────────────────────────── */
+
+.dashboard-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.hero-welcome h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-h);
+    margin-bottom: 0.1rem;
+}
+
+.hero-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.hero-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+/* ─── STATS STRIP (COMPACT & REFINED) ─────────────────────────────── */
+
+.stats-summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+}
+
+@media (max-width: 900px)  { .stats-summary-row { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .stats-summary-row { grid-template-columns: 1fr 1fr; } }
+
+.stat-summary-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: var(--shadow-xs);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.stat-main { display: flex; flex-direction: column; gap: 0.1rem; }
+
+.stat-value {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    color: var(--text-h);
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 0.1rem;
+}
+
+.stat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.stat-dot-blue   { background: var(--accent); }
+.stat-dot-red    { background: var(--risk); }
+.stat-dot-amber  { background: var(--caution); }
+.stat-dot-green  { background: var(--ok); }
+
+.clinical-grid {
+    display: grid;
+    grid-template-columns: 35% 1fr;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+@media (max-width: 1040px) { .clinical-grid { grid-template-columns: 1fr; } }
+
+.action-dots-btn {
+    padding: 0.25rem 0.4rem;
+    color: var(--text-muted);
+}
+.action-dots-btn:hover {
+    color: var(--text-h);
+    background: var(--bg-hover);
+}
+
+.dropdown-item-btn {
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.dropdown-item-btn:hover {
+    background: var(--bg-hover) !important;
+    color: var(--risk) !important;
+}
+
+/* ─── PANEL INTERNALS ─────────────────────────────────────────────── */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-h);
+    letter-spacing: -0.01em;
+}
+
+.section-body { padding: 1rem; }
+
+/* ─── WORKFLOW STEPS ──────────────────────────────────────────────── */
+
+.workflow-steps-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.55rem 1rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.7rem;
+}
+
+.workflow-step {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.step-number {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg-hover);
+    color: var(--text-muted);
+    font-size: 0.56rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-divider {
+    color: var(--border-strong);
+    flex: 1;
+    text-align: center;
+    font-size: 0.62rem;
+    min-width: 10px;
+}
+
+/* ─── DROPZONE ────────────────────────────────────────────────────── */
+
+.dropzone-container {
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 0.85rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    background: var(--bg-subtle);
+    position: relative;
+    margin-top: 0.4rem;
+}
+
+.dropzone-container:hover,
+.dropzone-container.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+}
+
+.dropzone-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-h);
+    margin-bottom: 0.12rem;
+}
+
+.dropzone-hint {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 0.55rem;
+}
+
+/* ─── SELECTED FILE CARD ──────────────────────────────────────────── */
+
+.selected-file-card {
+    margin-top: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    background: var(--accent-subtle);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.file-info-row { display: flex; justify-content: space-between; align-items: center; gap: 0.4rem; }
+.file-name { font-size: 0.78rem; font-weight: 600; color: var(--accent); word-break: break-all; }
+.file-size { font-size: 0.7rem; color: var(--text-secondary); white-space: nowrap; }
+
+/* ─── CLINICAL MRI ANALYSIS PROGRESS COMPONENT ────────────────────── */
+
+.mri-progress-card {
+    margin-top: 0.65rem;
+    padding: 0.85rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s ease;
+}
+
+.mri-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.45rem;
+}
+
+.mri-progress-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.mri-progress-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-muted);
+    animation: mriProgressPulse 1.4s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+.mri-progress-status-dot.complete {
+    background: var(--ok);
+    box-shadow: 0 0 0 2px var(--ok-bg);
+    animation: none;
+}
+
+.mri-progress-status-dot.error {
+    background: var(--risk);
+    box-shadow: 0 0 0 2px var(--risk-bg);
+    animation: none;
+}
+
+@keyframes mriProgressPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.25); opacity: 0.6; }
+}
+
+.mri-progress-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-h);
+    letter-spacing: -0.01em;
+}
+
+.mri-progress-percent {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.mri-progress-percent.complete {
+    color: var(--ok);
+}
+
+.mri-progress-percent.error {
+    color: var(--risk);
+}
+
+.mri-progress-track {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 0.45rem;
+}
+
+.mri-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent) 0%, #38bdf8 100%);
+    border-radius: 999px;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease;
+}
+
+.mri-progress-bar.complete {
+    background: var(--ok);
+}
+
+.mri-progress-bar.error {
+    background: var(--risk);
+}
+
+.mri-progress-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    gap: 0.5rem;
+}
+
+.mri-progress-stage-text {
+    font-weight: 500;
+    color: var(--text-body);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mri-progress-engine-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-subtle);
+    border: 1px solid var(--accent-border);
+    padding: 0.1rem 0.35rem;
+    border-radius: var(--radius-xs);
+    white-space: nowrap;
+}
+
+/* ─── PAGE HEADER ─────────────────────────────────────────────────── */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.15rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.page-header-title h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
+.page-header-title p  { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.1rem; }
+
+/* ─── EMPTY STATE ─────────────────────────────────────────────────── */
+
+.empty-state { padding: 2.5rem 1rem; text-align: center; }
+.empty-state-title { font-size: 0.88rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.25rem; }
+.empty-state-sub   { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.9rem; line-height: 1.5; }
+
+/* ─── TABLE PANEL ─────────────────────────────────────────────────── */
+
+.table-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.panel-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel-title { font-size: 0.84rem; font-weight: 600; color: var(--text-h); }
+
+/* ─── PATIENT DETAIL ──────────────────────────────────────────────── */
+
+.detail-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.65rem;
+}
+
+.detail-meta-item label {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    display: block;
+}
+
+.detail-meta-item span {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-h);
+    display: block;
+    margin-top: 0.12rem;
+}
+
+.info-box {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.55rem 0.75rem;
+    font-size: 0.82rem;
+    color: var(--text-body);
+}
+
+.info-box.multiline { min-height: 72px; white-space: pre-line; line-height: 1.5; }
+
+/* Scan history timeline entry */
+.scan-entry {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    transition: background 0.15s;
+}
+.scan-entry:hover { background: var(--bg-subtle); }
+.scan-entry + .scan-entry { margin-top: 0.6rem; }
+
+.scan-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.35rem;
+}
+
+.scan-file-name  { font-size: 0.82rem; font-weight: 600; color: var(--text-h); }
+.scan-upload-date { font-size: 0.71rem; color: var(--text-muted); margin-top: 0.08rem; }
+
+.scan-confidence {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.76rem;
+    margin-bottom: 0.3rem;
+    background: var(--bg-subtle);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-xs);
+    color: var(--text-secondary);
+}
+.scan-confidence strong { color: var(--text-h); }
+
+.scan-notes {
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    border-left: 2px solid var(--accent);
+    padding-left: 0.45rem;
+    margin-top: 0.3rem;
+    font-style: italic;
+}
+
+.scan-actions { margin-top: 0.5rem; display: flex; justify-content: flex-end; }
+
+/* ─── REGISTER FORM ───────────────────────────────────────────────── */
+
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+@media (max-width: 600px) { .form-grid-2 { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MRI CLINICAL WORKSPACE & DIAGNOSTIC VIEWER (REFINED)
+═══════════════════════════════════════════════════════════════════ */
+
+.workstation-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.15rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.workstation-patient-info {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.workstation-patient-name {
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: var(--text-h);
+}
+
+.workstation-sep {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.workstation-study-meta {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.workstation-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+/* Workstation Grid */
+.mri-workspace-grid {
+    display: grid;
+    grid-template-columns: 1fr 410px;
+    gap: 1.15rem;
+    align-items: start;
+}
+
+@media (max-width: 1060px) {
+    .mri-workspace-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Left: Interactive MRI Viewer Panel */
+.mri-viewer-panel {
+    background: #060b13;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-xs);
+}
+
+[data-theme="dark"] .mri-viewer-panel {
+    border-color: #1a2738;
+}
+
+.mri-viewer-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.55rem 0.85rem;
+    background: #09121f;
+    border-bottom: 1px solid #142133;
+    color: #94a3b8;
+}
+
+.mri-viewer-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mri-scan-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.12rem 0.4rem;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border-radius: var(--radius-xs);
+}
+
+.mri-scan-filename {
+    font-size: 0.72rem;
+    font-family: ui-monospace, monospace;
+    color: #cbd5e1;
+}
+
+.mri-viewer-controls {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.mri-tool-btn {
+    background: #0f1929;
+    border: 1px solid #1a283e;
+    color: #cbd5e1;
+    border-radius: var(--radius-xs);
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.mri-tool-btn:hover {
+    background: #182740;
+    border-color: #38bdf8;
+    color: #ffffff;
+}
+
+/* Viewport Stage */
+.mri-viewport-stage {
+    position: relative;
+    width: 100%;
+    height: 460px;
+    background: #010408;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.mri-marker {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-family: ui-monospace, monospace;
+    user-select: none;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.marker-top    { top: 6px; left: 50%; transform: translateX(-50%); }
+.marker-bottom { bottom: 6px; left: 50%; transform: translateX(-50%); }
+.marker-left   { left: 6px; top: 50%; transform: translateY(-50%); }
+.marker-right  { right: 6px; top: 50%; transform: translateY(-50%); }
+
+.mri-image-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mri-image-wrapper img {
+    max-width: 88%;
+    max-height: 88%;
+    object-fit: contain;
+    transition: transform 0.15s ease, filter 0.15s ease;
+    user-select: none;
+}
+
+.mri-fallback-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.mri-viewport-footer-info {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.35);
+    font-family: ui-monospace, monospace;
+    display: flex;
+    gap: 0.75rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Right: Analysis Panel */
+.mri-analysis-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: var(--shadow-xs);
+}
+
+.mri-patient-card {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.mri-patient-primary {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.mri-patient-name {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--text-h);
+}
+
+.mri-patient-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 0.65rem;
+}
+
+.meta-label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+.meta-value {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-h);
+    margin-top: 0.08rem;
+}
+
+/* Assessment Card */
+.mri-assessment-card {
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.assessment-risk {
+    background: var(--risk-bg);
+    border: 1px solid var(--risk-border);
+}
+.assessment-risk .assessment-result-title { color: var(--risk); }
+.assessment-risk .confidence-bar-fill   { background: var(--risk); }
+
+.assessment-caution {
+    background: var(--caution-bg);
+    border: 1px solid var(--caution-border);
+}
+.assessment-caution .assessment-result-title { color: var(--caution); }
+.assessment-caution .confidence-bar-fill   { background: var(--caution); }
+
+.assessment-ok {
+    background: var(--ok-bg);
+    border: 1px solid var(--ok-border);
+}
+.assessment-ok .assessment-result-title { color: var(--ok); }
+.assessment-ok .confidence-bar-fill   { background: var(--ok); }
+
+.assessment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.assessment-eyebrow {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.assessment-result-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+.confidence-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.76rem;
+    margin-top: 0.15rem;
+}
+
+.confidence-label { color: var(--text-secondary); }
+.confidence-number { font-weight: 700; color: var(--text-h); }
+
+.confidence-bar-track {
+    width: 100%;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .confidence-bar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.confidence-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 0.4s ease;
+}
+
+/* Clinical Sections */
+.clinical-section-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.clinical-section-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.biomarker-list {
+    font-size: 0.79rem;
+    color: var(--text-secondary);
+    padding-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    line-height: 1.4;
+}
+
+.clinical-notes-content {
+    font-size: 0.79rem;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.55rem 0.75rem;
+    line-height: 1.45;
+}
+
+.mri-actions-footer {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.2rem;
+}
+
+/* Clinical Spinner */
+.clinical-spinner-sm {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NeuroScan AI — Clinical MRI Diagnostic Workstation for Neurologists and Radiologists">
+    <title>{{ title if title else "NeuroScan AI — Clinical Workstation" }}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    {% block extra_css %}{% endblock %}
+
+    <!-- Prevent Theme Flash -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('ns-theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {}
+        })();
+    </script>
+</head>
+<body>
+
+<!-- ═══════════ REFINED CLINICAL HEADER ═══════════ -->
+<header class="site-header">
+    <nav class="navbar">
+
+        <!-- Prominent Brand Lockup (Logo 44px, Title 22-24px, Subtitle 13px) -->
+        <a href="{{ url_for('main.dashboard') if current_doctor else url_for('main.login') }}"
+           class="brand-container" aria-label="NeuroScan AI home">
+            <div class="brand-icon-box ns-logo-mark" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Concentric Outer MRI Scanner Rings -->
+                    <circle cx="80" cy="80" r="74" stroke="currentColor" stroke-width="2.5" opacity="0.3"/>
+                    <circle class="mri-scan-orbit" cx="80" cy="80" r="74" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="40 160"/>
+
+                    <!-- Human Brain Anatomical Cortex Contour -->
+                    <path class="mri-cortex" d="M78 30C66 30 55 35 48 43C40 52 38 64 38 76C38 88 42 98 48 106C54 114 62 120 72 124C75 125 78 126 78 128V30Z" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="mri-cortex" d="M82 30C94 30 105 35 112 43C120 52 122 64 122 76C122 88 118 98 112 106C106 114 98 120 88 124C85 125 82 126 82 128V30Z" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="80" y1="30" x2="80" y2="128" stroke="currentColor" stroke-width="2" stroke-dasharray="3 4" opacity="0.6"/>
+
+                    <!-- Internal Sulci & Gyri Pathways -->
+                    <path d="M52 54C60 58 68 54 74 60" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.75"/>
+                    <path d="M44 74C52 72 60 78 74 74" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.75"/>
+                    <path d="M46 94C54 96 62 90 74 94" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.75"/>
+
+                    <path d="M108 54C100 58 92 54 86 60" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.75"/>
+                    <path d="M116 74C108 72 100 78 86 74" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.75"/>
+                    <path d="M114 94C106 96 98 90 86 94" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.75"/>
+
+                    <!-- Laser Scan Beam Sweep -->
+                    <line class="mri-laser-beam" x1="36" y1="50" x2="124" y2="50" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+
+                    <!-- Synaptic Neural Nodes -->
+                    <circle class="mri-node mri-n1" cx="62" cy="56" r="3.5" fill="currentColor"/>
+                    <circle class="mri-node mri-n2" cx="98" cy="56" r="3.5" fill="currentColor"/>
+                    <circle class="mri-node mri-n3" cx="54" cy="82" r="3.8" fill="currentColor"/>
+                    <circle class="mri-node mri-n4" cx="106" cy="82" r="3.8" fill="currentColor"/>
+                    <circle class="mri-node mri-n5" cx="68" cy="102" r="3.5" fill="currentColor"/>
+                    <circle class="mri-node mri-n6" cx="92" cy="102" r="3.5" fill="currentColor"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">NeuroScan AI</span>
+                <span class="brand-sub">Clinical Workstation</span>
+            </div>
+        </a>
+
+        <!-- Center Navigation -->
+        {% if current_doctor %}
+        <nav class="nav-links" role="navigation" aria-label="Main navigation">
+            <a href="{{ url_for('main.dashboard') }}"
+               class="nav-item {% if request.path == '/dashboard' %}active{% endif %}">
+                Dashboard
+            </a>
+            <a href="{{ url_for('patients.list_patients') }}"
+               class="nav-item {% if request.path.startswith('/patients') %}active{% endif %}">
+                Patients
+            </a>
+            <a href="{{ url_for('main.list_reports') }}"
+               class="nav-item {% if request.path.startswith('/reports') %}active{% endif %}">
+                Reports
+            </a>
+        </nav>
+        {% else %}
+        <div></div>
+        {% endif %}
+
+        <!-- Right: Theme + Doctor Profile -->
+        <div class="nav-end">
+            <!-- Theme Toggle -->
+            <button id="themeToggle" class="theme-toggle" aria-label="Switch color theme" title="Toggle light / dark mode">
+                <span class="theme-icon theme-icon--light" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </span>
+                <span class="theme-toggle-thumb"></span>
+                <span class="theme-icon theme-icon--dark" aria-hidden="true">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </span>
+            </button>
+
+            {% if current_doctor %}
+            <div class="nav-profile-group">
+                <div class="user-avatar" aria-label="Doctor avatar">
+                    {% set np = current_doctor.name.split() %}
+                    {% if np|length >= 2 %}{{ np[0][0] }}{{ np[-1][0] }}{% else %}{{ current_doctor.name[:2]|upper }}{% endif %}
+                </div>
+                <div class="user-meta">
+                    <div class="user-name">{{ current_doctor.name }}</div>
+                    <div class="user-role">{{ current_doctor.department if current_doctor.department else 'Neurology Specialist' }}</div>
+                </div>
+                <a href="{{ url_for('main.logout') }}" class="btn btn-ghost btn-sm" style="color: var(--text-muted);">Logout</a>
+            </div>
+            {% else %}
+            <a href="{{ url_for('main.login') }}" class="btn btn-outline btn-sm">Physician Login</a>
+            {% endif %}
+        </div>
+
+    </nav>
+</header>
+
+<!-- Flash Alerts -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-region" role="alert" aria-live="polite">
+        <div class="flash-inner">
+            {% for category, message in messages %}
+                {% if not (category == 'success' and 'Welcome back' in message) %}
+                <div class="flash-msg flash-{{ category }}">
+                    <span>{{ message }}</span>
+                    <button class="flash-close" onclick="this.parentElement.remove()" aria-label="Dismiss">&times;</button>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Main Body -->
+<main class="site-main">
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

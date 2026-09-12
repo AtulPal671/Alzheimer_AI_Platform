@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-title">
+            <h1>Patients</h1>
+            <p>Search and manage patient clinical records.</p>
+        </div>
+        <a href="{{ url_for('patients.register_patient') }}" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Register Patient
+        </a>
+    </div>
+
+    <!-- Search Bar -->
+    <form method="GET" action="{{ url_for('patients.list_patients') }}" style="margin-bottom: 1rem;">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Search by patient name or ID…"
+                value="{{ search_query }}"
+                style="flex: 1; min-width: 220px;"
+            >
+            <button type="submit" class="btn btn-secondary">Search</button>
+            {% if search_query %}
+            <a href="{{ url_for('patients.list_patients') }}" class="btn btn-outline">Clear</a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Patient Table -->
+    <div class="table-panel">
+        {% if patients %}
+        <div class="table-responsive">
+            <table class="clinical-table" aria-label="Patient registry">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>ID</th>
+                        <th>Age / Sex</th>
+                        <th>Contact</th>
+                        <th>Attending</th>
+                        <th>Scans</th>
+                        <th>Registered</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('patients.view_patient', patient_id=patient.id) }}"
+                               style="font-weight: 600; color: var(--text-h);">
+                                {{ patient.name }}
+                            </a>
+                        </td>
+                        <td class="patient-id">{{ patient.patient_code }}</td>
+                        <td style="color: var(--text-secondary);">{{ patient.age }} / {{ patient.gender }}</td>
+                        <td style="color: var(--text-secondary);">{{ patient.contact_info if patient.contact_info else '—' }}</td>
+                        <td style="color: var(--text-secondary);">{{ patient.doctor_name if patient.doctor_name else '—' }}</td>
+                        <td>
+                            <span class="badge badge-neutral">{{ patient.total_scans }}</span>
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.78rem;">
+                            {% if patient.created_at %}
+                                {% if patient.created_at is string %}
+                                    {{ patient.created_at[:10] }}
+                                {% else %}
+                                    {{ patient.created_at.strftime('%Y-%m-%d') }}
+                                {% endif %}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('patients.view_patient', patient_id=patient.id) }}" class="btn btn-outline btn-sm">
+                                View Profile
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p class="empty-state-title">
+                {% if search_query %}No results for "{{ search_query }}"{% else %}No Patient Records Yet{% endif %}
+            </p>
+            <p class="empty-state-sub">
+                {% if search_query %}Try a different name or patient ID.{% else %}Register your first patient to begin MRI analysis.{% endif %}
+            </p>
+            {% if not search_query %}
+            <a href="{{ url_for('patients.register_patient') }}" class="btn btn-primary btn-sm">
+                + Register Patient
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
